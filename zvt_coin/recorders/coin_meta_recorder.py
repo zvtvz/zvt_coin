@@ -2,7 +2,7 @@ import pandas as pd
 
 from zvt.contract.api import df_to_db
 from zvt.contract.recorder import Recorder
-from zvt_coin.api import get_coin_exchange
+from zvt_coin.api import get_coin_exchange, COIN_EXCHANGES
 from zvt_coin.domain import Coin
 
 
@@ -55,9 +55,9 @@ class CoinMetaRecorder(Recorder):
                 # 存储该交易所的数字货币列表
                 if not df.empty:
                     df_to_db(df=df, data_schema=self.data_schema, provider=self.provider, force_update=True)
-                self.logger.info("init_markets for {} success".format(exchange_str))
-            except Exception as e:
-                self.logger.exception(f"init_markets for {exchange_str} failed", e)
+                self.logger.info(f"init_markets for {exchange_str} success")
+            except Exception:
+                self.logger.exception(f"init_markets for {exchange_str} failed")
 
 
 __all__ = ["CoinMetaRecorder"]

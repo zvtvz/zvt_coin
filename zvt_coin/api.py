@@ -4,6 +4,8 @@ import ccxt
 
 from zvt_coin import zvt_coin_config
 
+COIN_EXCHANGES = ['huobipro', 'binance']
+
 exchange_cache = {}
 
 exchange_config = {}

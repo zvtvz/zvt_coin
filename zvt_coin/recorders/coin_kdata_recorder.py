@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from zvt.api import get_kdata_schema, generate_kdata_id
+from zvt.api import get_kdata_schema
 from zvt.contract import IntervalLevel
 from zvt.contract.recorder import FixedCycleDataRecorder
 from zvt.utils import to_time_str, to_pd_timestamp
@@ -22,15 +22,13 @@ class CoinKdataRecorder(FixedCycleDataRecorder):
                  start_timestamp=None, end_timestamp=None, close_hour=0, close_minute=0, level=IntervalLevel.LEVEL_1DAY,
                  kdata_use_begin_time=False, one_day_trading_minutes=24 * 60) -> None:
         level = IntervalLevel(level)
+
         self.data_schema = get_kdata_schema(entity_type=entity_type, level=level, adjust_type=None)
         self.ccxt_trading_level = level.value
 
         super().__init__(entity_type, exchanges, entity_ids, codes, day_data, batch_size, force_update, sleeping_time,
                          default_size, real_time, fix_duplicate_way, start_timestamp, end_timestamp, close_hour,
                          close_minute, level, kdata_use_begin_time, one_day_trading_minutes)
-
-    def generate_domain_id(self, entity, original_data):
-        return generate_kdata_id(entity_id=entity.id, timestamp=original_data['timestamp'], level=self.level)
 
     def record(self, entity, start, end, size, timestamps):
         ccxt_exchange = get_coin_exchange(entity.exchange)
@@ -73,6 +71,7 @@ class CoinKdataRecorder(FixedCycleDataRecorder):
             return kdata_list
         else:
             self.logger.warning("exchange:{} not support fetchOHLCV".format(entity.exchange))
+
 
 if __name__ == '__main__':
     CoinKdataRecorder(exchanges=['huobipro'], codes=['BTC/USDT'], level=IntervalLevel.LEVEL_1DAY, real_time=False).run()
