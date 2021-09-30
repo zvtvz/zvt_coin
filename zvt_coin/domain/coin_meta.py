@@ -3,14 +3,14 @@ import pandas as pd
 from sqlalchemy import Column, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
-from zvt.contract import EntityMixin
+from zvt.contract import TradableEntity
 from zvt.contract.register import register_schema, register_entity
 
 CoinMetaBase = declarative_base()
 
 
 @register_entity(entity_type='coin')
-class Coin(EntityMixin, CoinMetaBase):
+class Coin(CoinMetaBase, TradableEntity):
     __tablename__ = 'coin'
     # 上市日
     list_date = Column(DateTime)
@@ -31,7 +31,7 @@ class Coin(EntityMixin, CoinMetaBase):
 
     @classmethod
     def get_trading_intervals(cls):
-        return [('00:00,23:59')]
+        return [('00:00', '23:59')]
 
 
 register_schema(providers=['ccxt'], db_name='coin_meta', schema_base=CoinMetaBase)

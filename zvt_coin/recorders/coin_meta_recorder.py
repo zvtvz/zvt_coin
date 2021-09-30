@@ -11,7 +11,7 @@ class CoinMetaRecorder(Recorder):
     data_schema = Coin
 
     def __init__(self, batch_size=10, force_update=False, sleeping_time=1, exchanges=COIN_EXCHANGES) -> None:
-        super().__init__(batch_size, force_update, sleeping_time)
+        super().__init__(force_update, sleeping_time)
         self.exchanges = exchanges
 
     def run(self):
